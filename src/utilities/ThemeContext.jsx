@@ -1,9 +1,7 @@
-import React, { createContext,  useState } from 'react';
-import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import React, { createContext, useContext, useState } from 'react';
+import { NightTheme, LightTheme } from '../constants/ThemeConstant';
 
-
-
-const ThemeContext = createContext(undefined);
+const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -12,12 +10,13 @@ export const ThemeProvider = ({ children }) => {
     setIsDarkTheme((prev) => !prev);
   };
 
-  const theme = isDarkTheme ? DarkTheme : DefaultTheme;
+  const theme = isDarkTheme ? NightTheme : LightTheme;
 
   return (
-    <ThemeContext.Provider value={{ isDarkTheme, toggleTheme, theme }}>
+    <ThemeContext.Provider value={{ theme, isDarkTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
+export const useTheme = () => useContext(ThemeContext);

@@ -7,8 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const RenderComponent = ({
   item,
   fetchTimer,
-  status,
-  setStatus,
   showModal,
   setShowModal,
   timerId, setTimerId
@@ -17,11 +15,9 @@ const RenderComponent = ({
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(item.duration);
+  const [status,setStatus] = useState(item.status)
 
-
-  useEffect(() => {
-    setStatus(item.status);
-  }, []);
+  
 
   useEffect(() => {
     const updateStorage = async () => {
@@ -49,20 +45,26 @@ const RenderComponent = ({
 
   const startTimer = () => {
     if (status === 'completed') return;
+    setIsRunning(true);
     setStatus('running');
     const id = setInterval(() => {
       setTimeRemaining(prevRemaining => {
         if (prevRemaining <= 1) {
           clearInterval(id);
           setStatus('completed');
+          setTimeout(() => {
+            resetTimer();
+          }, 1000);
           setShowModal(true);
           return 0;
         }
         return prevRemaining - 1;
       });
     }, 1000);
-    setTimerId(id);
+  
+    setIntervalId(id);
   };
+  
 
   const pauseTimer = () => {
     clearInterval(intervalId);
@@ -84,7 +86,6 @@ const RenderComponent = ({
     }
     setStatus('paused');
   };
-
   return (
     <View
       style={{

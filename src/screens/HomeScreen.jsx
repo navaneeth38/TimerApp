@@ -50,29 +50,33 @@ const HomeScreen = ({navigation}) => {
     }));
   };
 
-  const startAllTimers = async category => {
+  const startAllTimers = async (category) => {
     const updatedTimers = timers.map(timer => {
       if (timer.category === category) {
-        return {...timer, status: 'running', remaining: timer.duration};
+        return { ...timer, status: 'running', remaining: timer.duration };
       }
       return timer;
     });
-
+  
     await AsyncStorage.setItem('timers', JSON.stringify(updatedTimers));
-    setTimers(updatedTimers);
+    setTimers([...updatedTimers]); //
   };
+  
+  
 
-  const resetAllTimers = async category => {
+  const resetAllTimers = async (category) => {
     const updatedTimers = timers.map(timer => {
       if (timer.category === category) {
-        return {...timer, status: 'paused', remaining: timer.duration};
+        return { ...timer, status: 'paused', remaining: timer.duration };
       }
       return timer;
     });
-
+  
     await AsyncStorage.setItem('timers', JSON.stringify(updatedTimers));
-    setTimers(updatedTimers);
+    setTimers([...updatedTimers]); //
   };
+  
+  
 
   const removeCategory = category => {
     Alert.alert(
@@ -143,6 +147,8 @@ const HomeScreen = ({navigation}) => {
                 setShowModal={setShowModal}
                 item={item}
                 fetchTimer={fetchTimers}
+                timers={timers}
+                setTimer={setTimers}
               />
             </View>
           )}
